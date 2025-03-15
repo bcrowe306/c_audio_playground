@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "type": "cmake",
+            "request": "launch",
+            "name": "Debug portfile(s)",
+            "cmakeDebugType": "external",
+            "pipeName": "/tmp/vcpkg_ext_portfile_dbg",
+            "preLaunchTask": "Debug vcpkg commands"
+        },
+        {
+            "name": "Launch (lldb)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/c_audio_playground",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+target_sources(
+    c_audio_playground
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/GainNode.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FilterNode.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/BufferNode.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/PanNode.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/LevelMeterNode.cpp
+)
+target_include_directories(
+    c_audio_playground
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)

@@ -1,0 +1,33 @@
+# Executables
+*.exe
+*.out
+
+# Object files
+*.o
+*.obj
+
+# Libraries
+*.lib
+*.a
+*.so
+*.dylib
+
+# Dependency directories (e.g., vcpkg, conan)
+/dependencies/
+
+# Build directories
+build/
+/bin/
+
+# System-specific files
+.DS_Store
+Thumbs.db
+
+# IDE specific files
+*.vcxproj
+*.sln
+*.suo
+*.user
+
+.cache/
+__pycache__/

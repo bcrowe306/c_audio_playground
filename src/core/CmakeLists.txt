@@ -1,0 +1,22 @@
+target_sources(
+    c_audio_playground
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/Application.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/AudioEngine.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/AudioNode.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Daw.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MidiMsg.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MidiNode.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MidiPorts.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MidiEngine.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MidiHandler.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MidiRouter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/MidiScriptHandler.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Project.cpp
+   
+)
+target_include_directories(
+    c_audio_playground
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)

@@ -1,0 +1,168 @@
+Sampler:
+  name: string
+  file_path: string
+  buffer: array
+  length: int
+  sample_rate: int
+  channels: int
+  bit_depth: int
+  start: int
+  end: int
+  loop: bool
+  loop_start: int
+  loop_end: int
+  loop_crossfade: int # TODO: Implement loop crossfade
+  volume: float
+  pan: float
+  transpose: int
+  detune: int 
+  reverse: bool
+  unison_voices: int
+  unison_detune: int
+  unison_pan: float
+  unison_amount: float
+  velocity_sensitivity: float
+  key_tracking: float 
+  key_range: [int, int] # TODO: Implement key range
+  glide: bool 
+  glide_time: int 
+  playback_mode: [ADSR, ONE_SHOT]
+  pitch_bend: bool # TODO: Implement pitch bend
+  pitch_bend_amount: int # TODO: Implement pitch bend amount
+
+  # ADSR
+  attack: int
+  decay: int
+  sustain: int
+  release: int
+  attack_curve: float
+  decay_curve: float
+  release_curve: float
+
+  # One Shot
+  one_shot_action: [trigger, gate]
+  fade_in: int
+  fade_out: int
+  fade_curve: float
+
+  # Time Stretch
+  stretch: bool
+  stretch_algorithm: [Tonal, Percussive, Complex, Complex Pro]
+  stretch_amount: float
+  stretch_pitch: bool
+  stretch_time: bool
+
+  # Filter
+  filter: bool
+  filter_type: [Low Pass, High Pass, Band Pass, Band Stop]
+  filter_frequency: float
+  filter_resonance: float
+  filter_drive: float
+
+  # Filter Envelope: TODO: 
+  filter_attack: int
+  filter_decay: int
+  filter_sustain: int
+  filter_release: int
+  filter_attack_curve: float
+  filter_decay_curve: float
+  filter_release_curve: float
+  filter_envelope_amount: float
+  filter_envelope_velocity: float
+  filter_envelope_keytrack: float
+
+  # Pitch Envelope :TODO: Implement pitch envelope
+  pitch_attack: int
+  pitch_decay: int
+  pitch_sustain: int
+  pitch_release: int
+  pitch_attack_curve: float
+  pitch_decay_curve: float
+  pitch_release_curve: float
+  pitch_envelope_amount: float
+  pitch_envelope_velocity: float
+
+  # LFO: TODO
+  lfo: bool
+  lfo_waveform: [Sine, Triangle, Saw, Square, Random]
+  lfo_frequency: float
+  lfo_amount: float
+  lfo_destination: [Pitch, Filter, Volume, Pan]
+  lfo_phase: float
+  lfo_attack: int
+  lfo_rate: int
+  lfo_rate_type: [Hz, BPM]
+
+
+
+Chain:
+  - buffer:
+  - adsr:
+  - filter:
+  - volume:
+  - pan:
+
+
+
+Filter_Process:
+  - initial_filter_frequency:
+  - key_tracking:
+    base_key - played_key = key_difference:
+  - velocity_tracking:
+    
+  - filter_envelope * filter_envelope_amount:
+  - filter_lfo * filter_lfo_amount:
+
+
+
+voice_manager:
+
+  # This is the vector of notes that are currently being played.
+  # Think of this vector as tracking the state of the keyboard being played.
+  # This is necessary for the implementation of legato. I may be holding notes that will be played in the future.
+  note_tracker:
+    - note_number:
+      note_velocity:
+      note_age:
+
+  # This is the vecotr of voices that should be playing. 
+  # The polyphony, and legato settings will determine how many voices are playing at once. Those voice will be stored in the voice_tracker.
+  voice_tracker: 
+    - voice_age:
+      voice_note:
+      voice_velocity:
+      voice_adsr:
+
+  # This is the vector of voices that are currently playing.
+  voices: 
+    - note: 
+      velocity:
+      unison_detune:
+      unison_pan:
+      note_on:
+      is_playing:
+      age:
+      counter:
+      voice_filter_node:
+      base_filter_frequency:
+      adsr:
+      filter_adsr:
+      filter_adsr_ratio:
+      pitch_adsr:
+      pitch_adsr_ratio:
+      sample_rate:
+
+
+note_flow_diagram
+ - note on event: 
+    - place the note int the note note_tracker:
+      Give it an age to keep track of order played
+    - Create a voice for the note in the voice_tracker based on polyphony and legato
+        The voice_tracker should now be a source of truth for the notes that should be playing.
+        The voices in the voice tracker should also have the age stored here.
+    - In the process method, Loop through the voice_tracker and create a voice for each voice in the tracker multiplied by unison.
+        This is where unison voices are created and detune, and panning are applied to each voice.
+        Note that each voice that is created here should also have the corresponding age and note of the voice it reference.
+        This will keep us from having to regenerate a voice for each call to the process method.
+        
+  

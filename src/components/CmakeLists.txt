@@ -1,0 +1,11 @@
+target_sources(
+    c_audio_playground
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/AudioSampler.cpp
+   
+)
+target_include_directories(
+    c_audio_playground
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)

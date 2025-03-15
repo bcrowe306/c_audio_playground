@@ -1,0 +1,18 @@
+target_sources(
+    c_audio_playground
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/ADSR.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Biquad.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Envelope.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ExponentialSegment.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Observer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Parameter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Ramp.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/VoiceManager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/utility.cpp
+)
+target_include_directories(
+    c_audio_playground
+    PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
