@@ -1,0 +1,39 @@
+[submodule "lib/portaudio"]
+	path = lib/portaudio
+	url = https://github.com/PortAudio/portaudio.git
+[submodule "lib/rtmidi"]
+	path = lib/rtmidi
+	url = https://github.com/thestk/rtmidi.git
+[submodule "lib/choc"]
+	path = lib/choc
+	url = https://github.com/Tracktion/choc.git
+[submodule "build/brickworks"]
+	path = build/brickworks
+	url = https://github.com/sdangelo/brickworks.git
+[submodule "lib/brickworks"]
+	path = lib/brickworks
+	url = https://github.com/sdangelo/brickworks.git
+[submodule "lib/Nuklear"]
+	path = lib/Nuklear
+	url = https://github.com/Immediate-Mode-UI/Nuklear.git
+[submodule "lib/rchoscillators"]
+	path = lib/rchoscillators
+	url = https://github.com/rcliftonharvey/rchoscillators.git
+[submodule "lib/concurrentqueue"]
+	path = lib/concurrentqueue
+	url = https://github.com/cameron314/concurrentqueue.git
+[submodule "lib/q"]
+	path = lib/q
+	url = https://github.com/cycfi/q.git
+[submodule "lib/DSP-Cpp-filters"]
+	path = lib/DSP-Cpp-filters
+	url = https://github.com/dimtass/DSP-Cpp-filters.git
+[submodule "lib/pybind11"]
+	path = lib/pybind11
+	url = https://github.com/pybind/pybind11.git
+[submodule "lib/sol2"]
+	path = lib/sol2
+	url = https://github.com/ThePhD/sol2.git
+[submodule "lib/lua-cmake"]
+	path = lib/lua-cmake
+	url = https://github.com/lubgr/lua-cmake.git
