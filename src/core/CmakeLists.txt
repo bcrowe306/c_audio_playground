@@ -13,6 +13,7 @@ target_sources(
     ${CMAKE_CURRENT_SOURCE_DIR}/MidiRouter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/MidiScriptHandler.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Project.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/TrackNode.cpp
    
 )
 target_include_directories(

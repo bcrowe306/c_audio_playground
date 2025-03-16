@@ -165,4 +165,28 @@ note_flow_diagram
         Note that each voice that is created here should also have the corresponding age and note of the voice it reference.
         This will keep us from having to regenerate a voice for each call to the process method.
         
+TrackNode:
+  classes:
+    - AudioNode
+    - MidiNode
+    - AutomationNode
+    - Observer
+  name: string
+  id: int
+  type: [Midi Instrument, Audio, Automation]
+  midi_input_device: string
+  midi_input_channel: int
+  midi_output_device: string
+  midi_output_channel: int
+  audio_input: string
+  audio_output: string
+  effect_chain: [Chain]
+  volume: float
+  pan: float
+  mute: bool
+  solo: bool
+  arm: bool
+  monitor: bool
+  clips: [Clip]
+
   

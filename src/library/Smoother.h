@@ -24,6 +24,8 @@ public:
     updateStep();
   }
 
+  // Set the target value for the smoother
+  // @param newValue: The target value
   void setTarget(float newValue) {
     if (newValue != targetValue) { // Only update if there's a change
       targetValue = newValue;
