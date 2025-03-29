@@ -32,7 +32,7 @@ public:
         this->global_gain_node = make_shared<GainNode>();
         this->beat_gain_node = make_shared<GainNode>();
         this->metronome_sound->add_node_to_chain(beat_gain_node);
-        metronome_sound->add_node_to_chain(global_gain_node);
+        this->metronome_sound->add_node_to_chain(global_gain_node);
 
         global_gain.on_change = [&](float value){
             this->global_gain_node->set_gain_db(value);

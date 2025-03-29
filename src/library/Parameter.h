@@ -26,16 +26,21 @@ public:
     this->_sample_rate = sample_rate;
     this->name = name;
   }
-  virtual ~Parameter() { std::cout << "Parameter destroyed\n"; };
+  virtual ~Parameter() {  };
   virtual void process(){};
   virtual void encode(YAML::Emitter &out){};
   virtual void decode(YAML::Node &node){};
+  void prepare(int sample_rate, int buffer_size){
+    this->_sample_rate = sample_rate;
+    this->_buffer_size = buffer_size;
+  }
 
   
 
 protected:
   std::string name;
   u_int _sample_rate = 44100;
+  int _buffer_size = 64;
 };
 
 class StringParameter : public Parameter {
@@ -555,7 +560,16 @@ public:
     }
   }
 
+  void prepare(int sample_rate, int buffer_size) {
+    this->_sample_rate = sample_rate;
+    this->_buffer_size = buffer_size;
+  }
+  void set_sample_rate(u_int sample_rate) { this->_sample_rate = sample_rate; };
+  void set_buffer_size(int buffer_size) { this->_buffer_size = buffer_size; };
+
 protected:
+  int _sample_rate = 44100;
+  int _buffer_size = 64;
   std::string name = name;
   std::vector<T> options = options;
   T _value;
@@ -597,11 +611,20 @@ public:
 
   void decode(YAML::Node &node);
 
+  void prepare(int sample_rate, int buffer_size) {
+    this->_sample_rate = sample_rate;
+    this->_buffer_size = buffer_size;
+  }
+  void set_sample_rate(u_int sample_rate) { this->_sample_rate = sample_rate; };
+  void set_buffer_size(int buffer_size) { this->_buffer_size = buffer_size; };
+
 protected:
   std::string name;
   std::vector<std::string> options;
   int value;
   int default_value = 0;
+  int _sample_rate = 44100;
+  int _buffer_size = 64;
 };
 
 #endif //  PARAMETER_H

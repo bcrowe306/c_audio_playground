@@ -60,6 +60,13 @@ public:
     // @param channel: int. The channel to filter for.
     void set_input_channel_filter(int channel);
 
+    // Determines whether the device is a source. A source is a device that generates midi messages.
+    void set_is_source(bool is_source);
+    
+    // Determines whether the device is a destination. A destination is a device that receives midi messages.
+    void set_is_destination(bool is_destination);
+
+
 protected:
     string _device_name;
     string _input_device_filter = "";

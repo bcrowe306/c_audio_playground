@@ -2,8 +2,15 @@
 
 TrackNode::TrackNode() {
     this->name.set_value("Track");
+    _chain_nodes.reserve(8);
 }
-TrackNode::~TrackNode() {}
+TrackNode::TrackNode(std::string name) {
+    this->name.set_value(name);
+    _chain_nodes.reserve(8);
+}
+TrackNode::~TrackNode() {
+    std::cout << "TrackNode destroyed\n";
+}
 
 void TrackNode::setup_nodes() {
     this->add_node_to_chain(panNode);
@@ -13,6 +20,8 @@ void TrackNode::setup_nodes() {
 }
 
 void TrackNode::setup_parameters() {
+    
+
     volume_db.on_change = [this](float value) {
         volume->set_gain_db(value);
     };
@@ -74,3 +83,22 @@ void TrackNode::_process_midi(MidiMsg msg) {
     }
    
 }
+
+void TrackNode::encode(YAML::Emitter &out) {
+    out << YAML::Key << "Track";
+    out << YAML::Value << YAML::BeginMap;
+    name.encode(out);
+    id.encode(out);
+    midi_input_device.encode(out);
+    midi_output_device.encode(out);
+    midi_input_channel.encode(out);
+    midi_output_channel.encode(out);
+    volume_db.encode(out);
+    pan.encode(out);
+    mute.encode(out);
+    solo.encode(out);
+    arm.encode(out);
+    out << YAML::EndMap;
+}
+
+

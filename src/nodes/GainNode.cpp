@@ -15,7 +15,6 @@ GainNode::GainNode()
         
         output_buffer[0] = input_buffer[0] * smoother.getValue();
         output_buffer[1] = input_buffer[1] * smoother.getValue();
-        return;
     }
     void GainNode::set_gain(float gain, float time_ms)
     {

@@ -11,7 +11,7 @@ MidiRouter::~MidiRouter() {}
 void MidiRouter::add_node(MidiNode::MPtr node) {
     _add_child_node(node);
   if (node->_is_source) {
-    _sources.push_back(node);
+    _sources.emplace_back(node);
   }
   if (node->_is_destination) {
     _destinations.push_back(node);
@@ -47,6 +47,7 @@ void MidiRouter::_remove_child_node(MPtr node) {
   if (_is_processing) {
     _child_removal_queue.enqueue(node);
   } else {
+    std:;cout << "Removing node: " << node->name.c_str() << std::endl;
     _children.erase(std::remove(_children.begin(), _children.end(), node), _children.end());
   }
 }

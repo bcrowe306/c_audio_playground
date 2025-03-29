@@ -1,7 +1,44 @@
 #include "Application.h"
 #include "Daw.h"
+#include "Project.h"
+#include "TrackNode.h"
+#include <cstddef>
 #include <memory>
 #include <string>
+#include <vector>
+
+TracksStruct::TracksStruct(shared_ptr<Daw> daw, shared_ptr<Project> project) : daw(daw), project(project)
+{ std::cout << "Tracks created\n"; }
+
+void TracksStruct::add_track() {
+    project->add_track();
+}
+
+void TracksStruct::remove_track(size_t index) {
+    project->remove_track(index);
+}
+
+TracksStruct::TracksStruct() {}
+
+vector<shared_ptr<TrackNode>> * TracksStruct::get_tracks(){
+    return & project->tracks;
+}
+
+shared_ptr<TrackNode> TracksStruct::get_selected_track(){
+    return project->get_selected_track();
+}
+
+void TracksStruct::select_track(size_t index){
+    return project->select_track(index);
+}
+
+size_t TracksStruct::get_track_index(shared_ptr<TrackNode> track){
+    return project->get_track_index(track);
+}
+
+int TracksStruct::get_selected_track_index(){
+    return project->get_selected_track_index();
+}
 
 Transport::Transport(shared_ptr<Daw> daw) : daw(daw)
 { std::cout << "Transport created\n"; }
@@ -168,6 +205,8 @@ Application::Application(shared_ptr<Daw> daw) :
 {
     std::cout << "Application created\n";
     new_project();
+    Tracks = TracksStruct(daw, project);
+    
 }
 
 

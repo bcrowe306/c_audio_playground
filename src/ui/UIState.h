@@ -11,6 +11,12 @@ using std::shared_ptr;
 using AppPrt = shared_ptr<Application>;
 
 struct UIState {
+    ImVec2 AddVec(ImVec2 one, ImVec2 two){
+        return ImVec2(one.x + two.x, one.y + two.y);
+    }
+    ImVec2 SubtractVec(ImVec2 one, ImVec2 two){
+        return ImVec2(one.x - two.x, one.y - two.y);
+    }
     bool sidebar = true;
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     
@@ -42,6 +48,10 @@ struct UIState {
         MIXER,
         SONG,
      };
+
+    // Track View State
+    float track_view_section_height = 500.0f;
+    float track_view_main_width = 150.0f;
     MainWindowTab main_window_tab = MainWindowTab::TRACK;
     bool is_tab_selected(MainWindowTab tab){
         return main_window_tab == tab;
@@ -57,7 +67,11 @@ struct UIState {
     float footer_height = 40.0f;
     ImVec2 footer_position = ImVec2(0, 0);
     ImVec2 footer_size = ImVec2(0, 0);
+
+    ImVec2 track_header_size = ImVec2(120,30);
 };
+
+
 struct icons {
   ImU32 play = IM_COL32(45, 184, 42, 255);
   ImU32 pause = IM_COL32(255, 0, 0, 255);
@@ -81,12 +95,24 @@ struct ui_colors {
     ImU32 text_dark = IM_COL32(48, 48, 48, 255);
     ImU32 text_selected = IM_COL32(0, 204, 255, 255);
     ImU32 wave_color = IM_COL32(0, 178, 234, 200);
+    ImU32 wave_color_dark = IM_COL32(0, 178, 234, 100);
+    ImU32 wave_color_light = IM_COL32(0, 178, 234, 255);
+    ImU32 red = IM_COL32(255, 0, 0, 255);
+    ImU32 green = IM_COL32(0, 255, 0, 255);
+    ImU32 blue = IM_COL32(0, 0, 255, 255);
+    ImU32 yellow = IM_COL32(255, 255, 0, 255);
+    ImU32 purple = IM_COL32(255, 0, 255, 255);
+    ImU32 orange = IM_COL32(255, 127, 0, 255);
+    ImU32 pink = IM_COL32(255, 192, 203, 255);
+    ImU32 cyan = IM_COL32(0, 255, 255, 255);
+    ImU32 magenta = IM_COL32(255, 0, 255, 255);
+    ImU32 black = IM_COL32(0, 0, 0, 255);
 };
 
 
 
 
 
-static UIState ui_state;
+static inline UIState ui_state;
 static ui_colors ui_colors;
 #endif // !UI_STATE_H

@@ -102,6 +102,10 @@ void Toolbar(AppPrt App, ImVec2 position, ImVec2 size, UIState &ui_state)
       App->Transport.stop();
     }
     ImGui::SameLine();
+    if(Button("Add Track")){
+      App->Tracks.add_track();
+    }
+
     
     PopFont();
     PopStyleVar();

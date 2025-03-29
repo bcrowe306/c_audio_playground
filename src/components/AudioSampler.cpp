@@ -10,7 +10,6 @@
 #include <memory>
 #include "library/VoiceAllocator.h"
 
-//  TODO: Implement Gain node with volume smoothing
 
 
 AudioSampler::AudioSampler(std::string file_path, unsigned int sample_rate) : voice_manager(4)
@@ -311,9 +310,7 @@ AudioSampler::AudioSampler(std::string file_path, unsigned int sample_rate) : vo
     }
     void AudioSampler::audition()
     {
-        // TODO: Implement audition
         voice_manager.audition();
-        // voice_manager.midi_input(MidiMsg(0x90, 60, 100));
     }
     float AudioSampler::get_playhead_position()
     {
@@ -359,10 +356,7 @@ AudioSampler::AudioSampler(std::string file_path, unsigned int sample_rate) : vo
     }
     void AudioSampler::set_filter_type(int enum_value)
     {
-        // TODO: Fix later for whatever filter you decide to use
-        auto type_name = filter_type.get_option();
         FilterType type = static_cast<FilterType>(enum_value);
-        // filter->set_type(type);
         voice_manager.set_filter_type(type);
     }
 
@@ -444,7 +438,7 @@ AudioSampler::AudioSampler(std::string file_path, unsigned int sample_rate) : vo
         voice_manager.set_end(end);
     }
 
-    void AudioSampler::process_audio(float *input_buffer, float *output_buffer, unsigned long frameCount, AudioEngineContext &context)
+    void AudioSampler::generate_audio(float *buffer_to_fill, unsigned long frameCount, AudioEngineContext &context)
     {
 
         // Check if sampler is offline, loading, disabled, or has empty buffer, and return if true
@@ -490,8 +484,8 @@ AudioSampler::AudioSampler(std::string file_path, unsigned int sample_rate) : vo
                 }
 
                 // std::cout << "Processing Samples: " << processing_samples[0] << ", " << processing_samples[1] << std::endl;
-                output_buffer[0] += processing_samples[0];
-                output_buffer[1] += processing_samples[1];
+                buffer_to_fill[0] += processing_samples[0];
+                buffer_to_fill[1] += processing_samples[1];
 
                 
         }
@@ -500,8 +494,8 @@ AudioSampler::AudioSampler(std::string file_path, unsigned int sample_rate) : vo
         // auto panned_samples = pan_node->process(filtered_samples);
 
         // Apply volume
-        output_buffer[0] = output_buffer[0] * db_to_linear(volume.get_value());
-        output_buffer[1] = output_buffer[1] * db_to_linear(volume.get_value());
+        buffer_to_fill[0] = buffer_to_fill[0] * db_to_linear(volume.get_value());
+        buffer_to_fill[1] = buffer_to_fill[1] * db_to_linear(volume.get_value());
 
         return;
     }

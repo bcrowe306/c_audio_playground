@@ -16,6 +16,7 @@ Daw::Daw()
         audio_engine = make_shared<AudioEngine>();
         audio_engine->set_sample_rate(44100);
         audio_engine->set_buffer_size(32);
+        audio_engine->name = "Audio Engine";
 
         // Setup Midi Engine
         midi_engine = make_shared<MidiEngine>();
@@ -64,12 +65,3 @@ Daw::~Daw()
     midi_engine->deactivate();
 }
 
-void Daw::add_audio_node()
-{
-    audio_engine->add_input_node(make_shared<AudioSampler>("/Users/bcrowe/Documents/Audio Samples/BVKER - Elevate Beamaker Kit/Tonal Shots/BVKER - Artifacts Keys 09 - C.wav"));
-}
-
-int Daw::get_audio_node_count()
-{
-    return audio_engine->get_input_node_count();
-}

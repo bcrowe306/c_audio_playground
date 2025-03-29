@@ -126,3 +126,16 @@ static float KeyTrackedCutoff(float midiNote, float baseFreq,
   float semitoneShift = (midiNote - baseNote) * scaleFactor / 12.0f;
   return baseFreq * std::pow(2.0f, semitoneShift);
 }
+
+#include <algorithm>
+#include <vector>
+
+template <typename T>
+inline void moveElement(std::vector<T> &vec, size_t from, size_t to) {
+  if (from >= vec.size() || to >= vec.size())
+    return; // Bounds check
+
+  T element = std::move(vec[from]); // Store the element to move
+  vec.erase(vec.begin() + from);    // Remove it from original position
+  vec.insert(vec.begin() + to, std::move(element)); // Insert at new position
+}

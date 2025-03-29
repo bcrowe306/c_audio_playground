@@ -12,7 +12,6 @@
 
     EnumParameter::~EnumParameter()
     {
-        std::cout << "Parameter destroyed\n";
     }
 
     // Set the value of the parameter

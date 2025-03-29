@@ -27,8 +27,6 @@ public:
     Daw();
     ~Daw();
 
-    void add_audio_node();
-    int get_audio_node_count();
     void quit();
 
 };

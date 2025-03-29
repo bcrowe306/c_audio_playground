@@ -1,10 +1,13 @@
 #pragma once
+#include "audio/choc_SampleBuffers.h"
+#include <cstddef>
 #ifndef APPLICATION_H
 #define APPLICATION_H
 
 #include "core/Daw.h"
 #include "core/Project.h"
 #include "yaml-cpp/yaml.h"
+#include "core/TrackNode.h"
 #include <memory>
 #include <iostream>
 #include <string>
@@ -12,6 +15,29 @@
 using std::shared_ptr;
 using std::make_shared;
 using std::string;
+
+struct TracksStruct {
+  TracksStruct();
+  TracksStruct(shared_ptr<Daw> daw, shared_ptr<Project> project);
+
+  void add_track();
+  void remove_track(size_t index);
+  vector<shared_ptr<TrackNode>> * get_tracks();
+  shared_ptr<TrackNode> get_track(size_t index);
+  void select_track(size_t index);
+  size_t get_track_index(shared_ptr<TrackNode> track);
+  shared_ptr<TrackNode> get_selected_track();
+  int get_selected_track_index();
+  shared_ptr<TrackNode> get_bus_tracks();
+  shared_ptr<TrackNode> get_selected_bus_track();
+  shared_ptr<TrackNode> get_master_track();
+  void move_track(unsigned int from, unsigned int to);
+  void solo_track(size_t index);
+  void mute_track(size_t index);
+  void arm_track(size_t index);
+  shared_ptr<Daw> daw;
+  shared_ptr<Project> project;
+};
 
 struct Transport {
   Transport(shared_ptr<Daw> daw);
@@ -72,6 +98,7 @@ public:
   shared_ptr<Daw> daw;
   shared_ptr<Project> project;
   Transport Transport;
+  TracksStruct Tracks;
 };
 
 #endif //  APPLICATION_H

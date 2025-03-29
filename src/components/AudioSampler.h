@@ -155,7 +155,7 @@ protected:
     // @param shift: The shift of the sensitivity
     // @return The mapped linear amplitude attenuation for each sample of this voice
     float calculate_velocity_sensitivity(float velocity, float sensitivity, float range = 2, float shift = 1);
-    void process_audio(float *input_buffer, float *output_buffer, unsigned long frameCount , AudioEngineContext &context) override;
+    void generate_audio(float *buffer_to_fill, unsigned long frameCount , AudioEngineContext &context) override;
     void get_interpolated_samples(SynthVoice &v);
     void _process_midi(MidiMsg msg) override;
     bool offline = true;

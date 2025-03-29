@@ -42,6 +42,7 @@ class TrackNode : public AudioNode, public MidiNode, public IObserver, public IS
 {
 public:
     TrackNode();
+    TrackNode(std::string name);
     ~TrackNode();
     StringParameter name = StringParameter("Name", "Track");
     StringParameter id = StringParameter("ID", generateUUID());
@@ -69,6 +70,8 @@ protected:
     void setup_nodes();
     void setup_parameters();
     void _process_midi(MidiMsg msg);
+    void encode(YAML::Emitter &out);
+    void decode(YAML::Node &node);
 };
 
 #endif // !TRACKNODE_H

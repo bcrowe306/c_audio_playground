@@ -136,11 +136,8 @@ int AudioEngine::paCallback(const void *inputBuffer, void *outputBuffer,
     AudioEngine *audio_engine = (AudioEngine *)userData;
 
     // Prepare the graph for processing only if it is dirty
-    // _is_dirty  if there are nodes that are in queue to be added or removed.
-    if(audio_engine->_is_dirty){
-        audio_engine->prepare_graph();
-    }
-
+    audio_engine->prepare_graph();
+    
     float *out = (float *)outputBuffer;
     unsigned int i;
     (void)inputBuffer; /* Prevent unused variable warning. */

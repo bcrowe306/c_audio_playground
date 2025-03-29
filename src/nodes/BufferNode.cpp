@@ -49,6 +49,7 @@ static inline float sample_interpolation(float read_pointer, u_int channel, u_in
 BufferNode::BufferNode(std::string file_path, u_int sample_rate)
     {
         notify_state_change(BufferNode::States::OFFLINE);
+        set_is_source_node(true);
         this->_sample_rate = sample_rate;
         load_sample(file_path);
         _peaks.reserve(4096);
@@ -188,10 +189,10 @@ BufferNode::BufferNode(u_int sample_rate)
         return buffer;
     };
 
-    void BufferNode::process_audio(float *input_buffer, float *output_buffer, unsigned long frameCount, AudioEngineContext &context)
+    void BufferNode::generate_audio(float *buffer_to_fill, unsigned long frameCount, AudioEngineContext &context)
     {
-        output_buffer[0] = 0;
-        output_buffer[1] = 0;
+        buffer_to_fill[0] = 0;
+        buffer_to_fill[1] = 0;
 
         // Check if sampler is offline and return 0s if true
         if (_offline)
@@ -219,13 +220,14 @@ BufferNode::BufferNode(u_int sample_rate)
         // If the buffer is playing, get the samples
         if (_is_playing)
         {
-          get_samples_internal_counter(output_buffer);
+          get_samples_internal_counter(buffer_to_fill);
         }
 
         // Increment the counter by rate. This enables speeding up or slowing down the playback
         _counter += _counter_rate;
 
-        // Reverse the playback if reverse is true... Needs work
+        // Reverse the playback if reverse is true... 
+        // TODO: Needs work
         if (_reverse)
         {
             _counter -= _counter_rate;

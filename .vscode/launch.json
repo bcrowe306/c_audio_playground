@@ -12,7 +12,7 @@
             "name": "Launch (lldb)",
             "type": "lldb",
             "request": "launch",
-            "program": "${workspaceFolder}/build/c_audio_playground",
+            "program": "${workspaceFolder}/build/c_audio_playground.app/Contents/MacOS/c_audio_playground",
             "args": [],
             "cwd": "${workspaceFolder}"
         }

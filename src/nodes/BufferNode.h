@@ -185,7 +185,7 @@ protected:
     float *get_samples_internal_counter(float *buffer);
 
     // Process the samples
-    void process_audio(float *input_buffer, float * output_buffer, unsigned long frameCount, AudioEngineContext &context) override;
+    void generate_audio(float * buffer_to_fill, unsigned long frameCount, AudioEngineContext &context) override;
 
     void notify_state_change(std::string state){
         if(on_state_changed){

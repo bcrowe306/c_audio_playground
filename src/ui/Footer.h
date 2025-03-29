@@ -15,7 +15,7 @@ using namespace std;
 
 
 
-void Footer(AppPrt App, UIState &ui_state){
+inline void Footer(AppPrt App, UIState &ui_state){
     SetNextWindowPos(ui_state.footer_position);
     SetNextWindowSize(ui_state.footer_size);
 

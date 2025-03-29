@@ -147,4 +147,13 @@ void MidiNode::_generate_midi(MidiMsg msg)
     _is_processing = false;
     _process_queues();
 }
-    
+
+void MidiNode::set_is_source(bool is_source)
+{
+    _is_source = is_source;
+}
+
+void MidiNode::set_is_destination(bool is_destination)
+{
+    _is_destination = is_destination;
+}

@@ -19,14 +19,40 @@ void AudioNode::add_input_node(Ptr node)
     _addition_queue.enqueue(node);
 }
 
-void AudioNode::remove_input_node(Ptr &node)
+void AudioNode::remove_input_node(Ptr node)
 {
     _is_dirty = true;
     _removal_queue.enqueue(node);
     
 }
-
-float *AudioNode::process(float *input_buffer, float * output_buffer, unsigned long frameCount, std::atomic<uint64_t> &cycle, AudioEngineContext &context)
+void AudioNode::prepare(int sample_rate, int buffer_size)
+{
+    // Prepare the node for processing
+    _sample_rate = sample_rate;
+    _buffer_size = buffer_size;
+    for (auto &node : _input_nodes)
+    {
+        if(node == nullptr){
+            continue;
+        }
+        node->prepare(sample_rate, buffer_size);
+    }
+    for (auto &node : _chain_nodes)
+    {
+        if(node == nullptr){
+            continue;
+        }
+        node->prepare(sample_rate, buffer_size);
+    }
+    for (auto &param : _parameters)
+    {
+        if(param == nullptr){
+            continue;
+        }
+        param->prepare(sample_rate, buffer_size);
+    }
+}
+void AudioNode::process(float *input_buffer, float * output_buffer, unsigned long frameCount, std::atomic<uint64_t> &cycle, AudioEngineContext &context)
 {
     // Run process functions on attached parameters. This allows the the parameters to have timing based functionality like smoothing and ramping.
     for (auto &param : _parameters)
@@ -42,7 +68,6 @@ float *AudioNode::process(float *input_buffer, float * output_buffer, unsigned l
     {
         std::copy(cachedSamples.begin(), cachedSamples.begin() + 2, output_buffer);
 
-        return output_buffer;
     }
 
     // Update the last process cycle
@@ -52,43 +77,69 @@ float *AudioNode::process(float *input_buffer, float * output_buffer, unsigned l
     processing_samples[0] = 0.0;
     processing_samples[1] = 0.0;
 
-    // Process input nodes
-    // Process Inputs
-    
-    auto i = 0;
-    std::lock_guard<std::mutex> lock(mtx);
-    for (auto &node : _input_nodes)
+    if(_is_source_node)
     {
-        i++;
-        if(node == nullptr){
-            continue;
-        }
-
-        auto temp = node->process(input_buffer, output_buffer, frameCount, processCycle, context);
-        processing_samples[0] += temp[0];
-        processing_samples[1] += temp[1];
+        // Call the function to generate the audio samples into the output buffer
+        generate_audio(processing_samples, frameCount, context);
         
     }
+    else 
+    {
+        // Process input nodes, summing their output to the processing samples
+        
+        for (auto &node : _input_nodes)
+        {
+            if(node == nullptr){
+                continue;
+            }
 
+            node->process(input_buffer, child_nodes_output_buffer, frameCount, processCycle, context);
+            processing_samples[0] += child_nodes_output_buffer[0];
+            processing_samples[1] += child_nodes_output_buffer[1];
 
-    // Process this nodes audio. Sum it with the input nodes
-    process_audio(input_buffer, output_buffer, frameCount, context);
-    output_buffer[0] += processing_samples[0];
-    output_buffer[1] += processing_samples[1];
+            // Reset child nodes buffer to zeros
+            child_nodes_output_buffer[0] = 0.0;
+            child_nodes_output_buffer[1] = 0.0;
+        }
 
-    // Copy the processed samples to the output buffer
-    // std::copy(std::begin(processing_samples), std::end(processing_samples), output_buffer);
+    }
+
+    processing_samples[0] += input_buffer[0];
+    processing_samples[1] += input_buffer[1];
+
+    
+    process_audio(processing_samples, output_buffer, frameCount, context);
 
     // Process audio chain using the output of this node
     for (auto &node : _chain_nodes) {
-      node->process(output_buffer, output_buffer, frameCount,
-                    processCycle, context);
+        if(node == nullptr){
+            continue;
+        }
+        // Process the node with the output buffer as input
+
+        node->process(output_buffer, output_buffer, frameCount,
+            processCycle, context);
+        
     }
 
     // copy output buffer to cached samples
     std::copy(output_buffer, output_buffer + 2, cachedSamples.begin());
 
-    return output_buffer;
+}
+
+void AudioNode::set_is_source_node(bool is_source_node)
+{
+    _is_source_node = is_source_node;
+}
+
+bool AudioNode::is_source_node()
+{
+    return _is_source_node;
+}
+
+bool AudioNode::is_enabled()
+{
+    return _enabled;
 }
 
 void AudioNode::add_node_to_chain(Ptr node)
@@ -125,7 +176,8 @@ std::vector<AudioNode::Ptr> AudioNode::get_input_nodes()
     return _input_nodes;
 }
 void AudioNode::prepare_graph()
-{   std::cout << "Preparing Graph\n";
+{   
+    
     std::lock_guard<std::mutex> lock(mtx);
 
     // Go through all input nodes and clean their graphs
@@ -134,15 +186,21 @@ void AudioNode::prepare_graph()
         node->prepare_graph();
     }
 
+    if (!_is_dirty) {
+      return;
+    }
+    std::cout << "Preparing Graph\n";
     // Remove nodes from the input nodes that are in the removal queue
     Ptr _removal_audio_node_ptr;
     while (_removal_queue.try_dequeue(_removal_audio_node_ptr))
     {
+        std::cout << "Removing Input Node\n";
         _input_nodes.erase(std::remove(_input_nodes.begin(), _input_nodes.end(), _removal_audio_node_ptr), _input_nodes.end());
     }
 
     // Add nodes to the input nodes that are in the addition queue
     Ptr _addition_audio_node_ptr;
+    std::cout << name.c_str() <<  ": Queue Size: " << _addition_queue.size_approx() << std::endl;
     while (_addition_queue.try_dequeue(_addition_audio_node_ptr))
     {
         _input_nodes.emplace_back(_addition_audio_node_ptr);

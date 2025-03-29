@@ -89,6 +89,7 @@ int main(int, char**){
     lua.script("print('bark bark bark!')");
     auto daw = make_shared<Daw>();
     auto App = make_shared<Application>(daw);
+    App->Tracks.add_track();
     run_gui(App);
     // Get input
     // std::cin.get();

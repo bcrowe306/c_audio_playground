@@ -1,4 +1,5 @@
 #pragma once
+#include <cstddef>
 #ifndef PROJECT_H
 #define PROJECT_H
 
@@ -19,6 +20,13 @@
 #include "library/Parameter.h"
 #include "library/Observer.h"
 #include "core/Daw.h"
+#include "core/TrackNode.h"
+#include "library/utility.h"
+
+using std::shared_ptr;
+using std::make_shared;
+using std::string;  
+using std::vector;
 
 
 class Project : public ISubject, public IObserver {
@@ -30,14 +38,27 @@ class Project : public ISubject, public IObserver {
         IntParameter time_signature_numerator = IntParameter("Time Signature Numerator", 4, 1, 32, 1);
         IntParameter time_signature_denominator = IntParameter("Time Signature Denominator", 4, 1, 32, 1);
         BoolParameter metronome_enabled = BoolParameter("Metronome Enabled", true);
+        vector<shared_ptr<TrackNode>> tracks;
+        vector<shared_ptr<TrackNode>> busses;
+        shared_ptr<TrackNode> master_track;
         void encode(YAML::Emitter &out);
         void decode(YAML::Node &node);
         std::shared_ptr<Daw> daw;
+        void add_track();
+        void remove_track(shared_ptr<TrackNode> track);
+        void remove_track(size_t index);
+        void move_track(unsigned int from, unsigned int to);
+        void select_track(size_t index);
+        void select_track(shared_ptr<TrackNode> track);
+        shared_ptr<TrackNode> get_selected_track();
+        int get_track_index(shared_ptr<TrackNode> track);
+        int get_selected_track_index();
 
     private:
+        int _selected_track = -1;
         void setup_parameters();
-        
-
+        const int _MAX_TRACKS = 32;
+        const int _MAX_BUSSES = 8;
 };
 
 #endif // !PROJECT_H

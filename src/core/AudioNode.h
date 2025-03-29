@@ -1,4 +1,5 @@
 #pragma once
+#include <_types/_uint64_t.h>
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -27,10 +28,10 @@ public:
     void add_input_node(Ptr node);
 
     // Remove an input node from this node
-    void remove_input_node(Ptr &node);
+    void remove_input_node(Ptr node);
 
     // Process 1 frame of audio samples with output buffer of samples. Return samples will be summed. Modified the buffer will override the already processed samples.
-    float * process(float *input_buffer, float *output_buffer, unsigned long frameCount, std::atomic<uint64_t> &cycle, AudioEngineContext &context);
+    void process(float *input_buffer, float *output_buffer, unsigned long frameCount, std::atomic<uint64_t> &cycle, AudioEngineContext &context);
 
     // Add a node to the processing chain
     void add_node_to_chain(Ptr node);
@@ -47,34 +48,55 @@ public:
     void set_enabled(bool enabled);
 
     int get_input_node_count();
-
+    void prepare (int sample_rate, int buffer_size);
     void prepare_graph();
     
     // This is the main method that should be overriden to implement custom functionality. 
     // This is where the audio processing should be implemented. 
-    // Generative nodes should implement this method to generate audio samples.
     // Effect nodes should implement this method to process audio samples.
     // Modifying the buffer will override the already processed samples.
     virtual void process_audio(float *input_buffer, float *output_buffer, unsigned long frameCount, AudioEngineContext &context)
     {
-        // std::copy(cachedSamples.begin(), cachedSamples.begin() + 2, buffer);
+        output_buffer[0] = input_buffer[0];
+        output_buffer[1] = input_buffer[1];
     }
+
+    // This is the main method that should be overriden to implement custom functionality.
+    // This is where generated samples should be implemented. Synthesized, Samplers, etc would be done here
+    virtual void generate_audio(float *buffer_to_fill, unsigned long frameCount, AudioEngineContext &context){
+        buffer_to_fill[0] = 0.0;
+        buffer_to_fill[1] = 0.0;
+    };
 
     void attach_parameter(Parameter *parameter)
     {
         _parameters.push_back(parameter);
     }
 
+    // Is this node a source node? If so, the node will be used to generate audio samples.
+    void set_is_source_node(bool is_source_node);
+    
+    // Returns true if this node is a source node.
+    bool is_source_node();
+
+    // Returns true if this node is enabled.   
+    bool is_enabled();
+
+
 protected:
+    int _sample_rate = 44100;
+    int _buffer_size = 64;
     std::vector<Ptr> _chain_nodes;
     bool _is_dirty = false;
+    bool _enabled = true;
+    bool _is_source_node = false;
     std::vector<Ptr> _input_nodes;
     std::vector<float> cachedSamples;
     std::vector<Parameter *> _parameters;
-    bool _enabled = true;
     std::atomic<uint64_t> processCycle;
     uint64_t lastProcessCycle = 0;
     float processing_samples[2] = {0.0, 0.0};
+    float child_nodes_output_buffer[2] = {0.0, 0.0};
     moodycamel::ConcurrentQueue<Ptr> _removal_queue = moodycamel::ConcurrentQueue<Ptr>(32);
     moodycamel::ConcurrentQueue<Ptr> _addition_queue = moodycamel::ConcurrentQueue<Ptr>(32);
     moodycamel::ConcurrentQueue<Ptr> _chain_removal_queue = moodycamel::ConcurrentQueue<Ptr>(32);
